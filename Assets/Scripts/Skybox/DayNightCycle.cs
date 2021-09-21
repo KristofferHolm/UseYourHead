@@ -21,12 +21,19 @@ public class DayNightCycle : MonoBehaviour
     public GameObject Moon, Sun;
     public Vector3 SunRotation;
     public Vector3 MoonRotation;
+    public Action<bool> NightTime;
+    public float ClockPerFrame;
+    public bool IsNight
+    {
+        get
+        {
+            return (Clock < 6 || Clock > 18);
+        }
+    }
+
+
     private float prevClock = -1f;
     private bool nightTime;
-    public Action<bool> NightTime;
-
-    public float ClockPerFrame;
-
     private void Awake()
     {
         Instance = this;
@@ -61,7 +68,7 @@ public class DayNightCycle : MonoBehaviour
             return;
         }
         bool newNightTime = nightTime;
-        nightTime = (Clock < 6 || Clock > 18);
+        nightTime = IsNight;
         if (newNightTime != nightTime)
             NightTime?.Invoke(nightTime);
 
