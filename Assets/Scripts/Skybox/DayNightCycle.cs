@@ -21,7 +21,7 @@ public class DayNightCycle : MonoBehaviour
     public GameObject Moon, Sun;
     public Vector3 SunRotation;
     public Vector3 MoonRotation;
-    public Action<bool> NightTime;
+    public Action<bool> NightTime, HoursBeforeNight, DawnTime;
     public float ClockPerFrame;
     public bool IsNight
     {
@@ -30,10 +30,26 @@ public class DayNightCycle : MonoBehaviour
             return (Clock < 6 || Clock > 18);
         }
     }
+    public bool IsHoursBeforeNight
+    {
+        get
+        {
+            return (Clock < 3 || Clock > 15);
+        }
+    }
+    public bool IsDawn
+    {
+        get
+        {
+            return (Clock > 4 && Clock < 8);
+        }
+    }
 
 
     private float prevClock = -1f;
     private bool nightTime;
+    private bool hoursBeforeNight;
+    private bool dawnTime;
     private void Awake()
     {
         Instance = this;
@@ -67,17 +83,33 @@ public class DayNightCycle : MonoBehaviour
             ClockPerFrame = 0f;
             return;
         }
-        bool newNightTime = nightTime;
-        nightTime = IsNight;
-        if (newNightTime != nightTime)
-            NightTime?.Invoke(nightTime);
 
-        Sun.transform.rotation = Quaternion.Euler(Clock * 15, 0, 0) * Quaternion.Euler(SunRotation);
-        Moon.transform.rotation = Quaternion.Euler(Clock * 15, 0, 0) * Quaternion.Euler(MoonRotation);
+        CheckTimes();
+
+        Sun.transform.rotation = Quaternion.Euler(SunRotation) * Quaternion.Euler(Clock * 15, 0, 0);
+        Moon.transform.rotation = Quaternion.Euler(MoonRotation) * Quaternion.Euler(Clock * 15, 0, 0);
         material.mainTextureOffset = new Vector2((Clock - 12f) / 24, 1);
         ClockPerFrame = Clock - prevClock;
         if (Math.Abs(ClockPerFrame) > 23f)
             ClockPerFrame += 24f;
         prevClock = Clock;
+    }
+
+    private void CheckTimes()
+    {
+        bool newHoursBeforeNight = hoursBeforeNight;
+        hoursBeforeNight = IsHoursBeforeNight;
+        if (newHoursBeforeNight != hoursBeforeNight)
+            HoursBeforeNight?.Invoke(hoursBeforeNight);
+
+        bool newNightTime = nightTime;
+        nightTime = IsNight;
+        if (newNightTime != nightTime)
+            NightTime?.Invoke(nightTime);
+
+        bool newDawnTime = dawnTime;
+        dawnTime = IsDawn;
+        if (newDawnTime != dawnTime)
+            DawnTime?.Invoke(dawnTime);
     }
 }

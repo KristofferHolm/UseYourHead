@@ -5,27 +5,19 @@ using UnityEngine;
 
 public class EnableAtNight : MonoBehaviour
 {
-    MeshRenderer meshRenderer;
-
+    public float DelayOn = 2f;
+    public float DelayOff = 2f;
+    public bool EnableAtDay = false;
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
-        DayNightCycle.Instance.NightTime += Activate;
-        if (DayNightCycle.Instance.IsNight)
-            meshRenderer.enabled = false;
+        DayNightCycle.Instance.HoursBeforeNight += Activate;
+        if (DayNightCycle.Instance.IsHoursBeforeNight)
+            gameObject.SetActive(!EnableAtDay);
     }
 
     private void Activate(bool on)
     {
-        StartCoroutine(DelayActivation(UnityEngine.Random.Range(0, 3), () => meshRenderer.enabled = on));
-    }
-    IEnumerator DelayActivation(float clockHours, Action callback)
-    {
-        while (clockHours > 0)
-        {
-            clockHours -= DayNightCycle.Instance.ClockPerFrame;
-            yield return null;
-        }
-        callback.Invoke();
+        var newOn = EnableAtDay ? !on : on;
+        CityManager.Instance.CoroutineDelayActivation(newOn ? DelayOn : DelayOff,()=> gameObject.SetActive(newOn));
     }
 }
