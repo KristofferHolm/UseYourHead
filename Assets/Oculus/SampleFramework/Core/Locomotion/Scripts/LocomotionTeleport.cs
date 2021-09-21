@@ -39,24 +39,8 @@ public class LocomotionTeleport : MonoBehaviour
 		PreTeleport,
 		CancelTeleport,
 		Teleporting,
-		PostTeleport,
-        Inactive
+		PostTeleport
 	}
-
-    public void EnableTeleportation(bool enable)
-    {
-        if (enable)
-        {
-            CurrentState = States.Ready;
-            StartCoroutine(ReadyStateCoroutine());
-        }
-        else
-        {
-            CurrentState = States.Inactive;
-            StopAllCoroutines();
-        }
-    }
-
 
 	#region Linear movement control booleans.
 	/// <summary>
@@ -147,7 +131,7 @@ public class LocomotionTeleport : MonoBehaviour
 	/// <summary>
 	/// The current state of the teleport state machine.
 	/// </summary>
-	public States CurrentState { get; set; }
+	public States CurrentState { get; private set; }
 
 	/// <summary>
 	/// Aiming is handled by one specific aim handler at a time. When the aim handler component is enabled, it 
@@ -805,8 +789,7 @@ public class LocomotionTeleport : MonoBehaviour
 
 		characterTransform.position = destPosition;
 		characterTransform.rotation = destRotation;
-        FlyingSignManager.Instance.CloseSign("teleport");
-    }
+	}
 
 	/// <summary>
 	/// Convenience method for finding the character's position.
