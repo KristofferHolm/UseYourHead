@@ -52,9 +52,9 @@ public class EnableWindowLights : MonoBehaviour
                 lightMats.Add(i);
             }
         }
-        if (on)
+        if (on && lightMats.Count > 0)
         {
-            int x = UnityEngine.Random.Range(0, lightMats.Count);
+            int x = UnityEngine.Random.Range(0, lightMats.Count-1);
             int y = UnityEngine.Random.Range(0, 1);
             newMats[lightMats[x]] = y == 1 ? CityManager.Instance.LightOn1 : CityManager.Instance.LightOn2;
         }
