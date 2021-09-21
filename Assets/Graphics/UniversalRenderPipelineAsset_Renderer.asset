@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures: []
   m_RendererFeatureMap: 
-  postProcessData: {fileID: 0}
+  postProcessData: {fileID: 11400000, guid: 9591ced7d2826044ca1e9c788cc093e3, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
